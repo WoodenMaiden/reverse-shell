@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pg-credentials
+type: Opaque
+data:
+  DB_HOST: {{ .Values.postgres.host | b64enc }}
+  DB_DATABASE: {{ .Values.postgres.database | b64enc }}
+  DB_USERNAME: {{ .Values.postgres.username | b64enc }}
+  DB_PASSWORD: {{ .Values.postgres.password | b64enc }}
