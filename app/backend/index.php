@@ -36,4 +36,10 @@ $app->get('/file', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/', function (Request $request, Response $response) {
+    $html = file_get_contents(__DIR__ . '/index.html');
+    $response->getBody()->write($html);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
 $app->run();

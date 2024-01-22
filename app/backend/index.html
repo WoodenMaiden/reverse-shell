@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        #search-bar {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #files-list {
+            margin-top: 20px;
+            text-align: left;
+            display: inline-block;
+            width: 60%;
+        }
+        .file-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>File Explorer</h1>
+    <input type="text" id="search-bar" placeholder="Search for a file...">
+    <button onclick="searchFile()">Search</button>
+    <div id="files-list">
+        <!-- Files will be listed here -->
+    </div>
+
+    <script>
+        // JavaScript to interact with the API
+        function fetchFiles() {
+            fetch('/file')
+                .then(response => response.json())
+                .then(files => {
+                    const list = document.getElementById('files-list');
+                    list.innerHTML = '';
+                    files.forEach(file => {
+                        const item = document.createElement('div');
+                        item.classList.add('file-item');
+                        item.textContent = file;
+                        list.appendChild(item);
+                    });
+                });
+        }
+
+        function searchFile() {
+            const filename = document.getElementById('search-bar').value;
+            fetch('/file/' + filename)
+                .then(response => response.text())
+                .then(content => {
+                    const list = document.getElementById('files-list');
+                    list.innerHTML = '<div class="file-item">' + content + '</div>';
+                });
+        }
+
+        // Initial fetch
+        fetchFiles();
+    </script>
+</body>
+</html>
