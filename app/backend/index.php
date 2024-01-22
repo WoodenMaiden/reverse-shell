@@ -5,6 +5,35 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$capsule = new Capsule;
+
+$capsule->addConnection([
+    'driver'    => 'pgsql',
+    'host'      => $_ENV['DB_HOST'],
+    'database'  => $_ENV['DB_DATABASE'],
+    'username'  => $_ENV['DB_USERNAME'],
+    'password'  => $_ENV['DB_PASSWORD'],
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => '',
+]);
+
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+// Check and create the 'views' table if it doesn't exist
+if (!Capsule::schema()->hasTable('views')) {
+    Capsule::schema()->create('views', function ($table) {
+        $table->string('ip');
+        $table->string('filename');
+        $table->integer('view_count')->default(1);
+        $table->primary(['ip', 'filename']);
+    });
+}
+
 $app = AppFactory::create();
 
 // Endpoint to get the content of a specific file
@@ -18,6 +47,22 @@ $app->get('/file/{filename}', function (Request $request, Response $response, ar
     } else {
         $response->getBody()->write("File not found");
         return $response->withStatus(404);
+    }
+
+    // Record view in the database
+    $ip = $request->getAttribute('ip_address'); // Get IP address from the request
+    $view = Capsule::table('views')->where('ip', $ip)->where('filename', $filename)->first();
+
+    if ($view) {
+        Capsule::table('views')
+            ->where('ip', $ip)
+            ->where('filename', $filename)
+            ->increment('view_count');
+    } else {
+        Capsule::table('views')->insert([
+            'ip' => $ip,
+            'filename' => $filename
+        ]);
     }
 
     return $response;
