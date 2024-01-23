@@ -19,4 +19,4 @@ RUN composer require vlucas/phpdotenv
 COPY index.php .
 COPY index.html .
 
-CMD [ "php", "./index.php" ]
+CMD [ "php", "-S", "localhost:80", "./index.php" ]
