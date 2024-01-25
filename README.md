@@ -57,3 +57,9 @@ Acess grafana with the following command, it will be available on [http://localh
 ```bash
 kubectl --namespace monitoring port-forward svc/grafana 3000
 ```
+
+
+## Exploits 
+
+- [Pod escape with logs](https://github.com/danielsagi/kube-pod-escape)
+- [Reverse shell](https://sysdig.com/learn-cloud-native/detection-and-response/what-is-a-reverse-shell/)
