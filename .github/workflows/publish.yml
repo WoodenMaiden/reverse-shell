@@ -3,7 +3,7 @@ name: Publish Docker Image
 on:
     push:
         branches:
-            - main
+            - master
 
 jobs:
     build-and-publish:
@@ -19,7 +19,7 @@ jobs:
             - name: Login to GHCR
               uses: docker/login-action@v1
               with:
-                username: ${{ github.actor }}
+                username: woodenmaiden
                 password: ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Build and push Docker image
