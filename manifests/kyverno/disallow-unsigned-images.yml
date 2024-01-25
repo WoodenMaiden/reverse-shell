@@ -1,0 +1,41 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-unsigned-images
+  annotations:
+    policies.kyverno.io/title: Disallow Unsigned Images
+    policies.kyverno.io/category: Pod Security Standards (Restricted)
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    kyverno.io/kyverno-version: 1.6.0
+    kyverno.io/kubernetes-version: "1.22-1.23"
+    policies.kyverno.io/description: >-
+      Only allow images that are signed.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: privilege-escalation
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+                - Deployment
+                - StatefulSet
+      verifyImages:
+        - imageReferences:
+          - "woodenmaiden/reverse-shell-example*"
+          attestors:
+          - count: 1
+            entries:
+            - keys:
+                publicKeys: |-
+                  -----BEGIN PUBLIC KEY-----
+                  role: woodenmaiden
+
+                  MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9A5zmcv6xf1E2QfShii9fcTE8+iY
+                  2BV3fmAiJdFcwz5BssLHET5z8oESLJxtqx1oYi9BufwLHuGen39Dn1k/VQ==
+                  -----END PUBLIC KEY-----
+             
+            
