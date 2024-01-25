@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: secure-containers/my-php-app
+  repository: secure-containers/my-app
   pullPolicy: IfNotPresent
   tag: "latest"
 

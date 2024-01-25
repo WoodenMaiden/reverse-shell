@@ -13,7 +13,7 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "php" {
+resource "helm_release" "webapp" {
   name  = "webapp"
   chart = "./app/backend/helm"
 

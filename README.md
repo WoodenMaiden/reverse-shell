@@ -1,4 +1,4 @@
-# Setup 
+# Setup
 
 ## Requirements
 
@@ -10,20 +10,20 @@
 
 ## Steps
 
-First create the k3d cluster and import the docker image into it 
+First create the k3d cluster and import the docker image into it
 
 ```bash
 k3d cluster create cybersec --port '8080:80@loadbalancer'
 
 cd app/backend
 
-docker build . -t secure-containers/my-php-app
-k3d image import secure-containers/my-php-app -c cybersec
+docker build . -t secure-containers/my-app
+k3d image import secure-containers/my-app -c cybersec
 
-cd - 
+cd -
 ```
 
-Next create the `terraform.tfvars` file with your database configuration, then run the terraform module just like this: 
+Next create the `terraform.tfvars` file with your database configuration, then run the terraform module just like this:
 
 ```bash
 cat << 'EOF' > terraform.tfvars

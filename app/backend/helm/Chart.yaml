@@ -1,7 +1,7 @@
 apiVersion: v2
-name: my-php-app
+name: my-app
 description: |
-  A Helm chart that deploys an absolutely safe PHP application....
+  A Helm chart that deploys a type-safe, cloud-native, 12 factor compliant, scalable, observable, secure, enterprise-ready nestjs application.
 
   KAMOULOX!
 

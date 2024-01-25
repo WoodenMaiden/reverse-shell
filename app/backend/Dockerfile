@@ -1,22 +1,23 @@
-# Use the official PHP image as the base image
-FROM php:latest
+# Base image
+FROM node:18
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
+# Create app directory
+WORKDIR /usr/src/app
 
-RUN apt update 
-RUN apt install git -y -qq
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Install app dependencies
+RUN npm install
 
-RUN composer require slim/slim:"4.*"
-RUN composer require slim/psr7
-RUN composer require illuminate/database
-RUN composer require illuminate/events
-RUN composer require vlucas/phpdotenv
+# Bundle app source
+COPY . .
 
+# Creates a "dist" folder with the production build
+RUN npm run build
 
-# Copy the index.php file into the container
-COPY index.php .
-COPY index.html .
+# Expose the port on which the app will run
+EXPOSE 3000
 
-CMD [ "php", "-S", "localhost:80", "./index.php" ]
+# Start the server using the production build
+CMD ["npm", "run", "start:prod"]

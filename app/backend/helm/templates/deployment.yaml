@@ -1,33 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "my-php-app.fullname" . }}
-  labels:
-    {{- include "my-php-app.labels" . | nindent 4 }}
+  name: {{ include "my-app.fullname" . }}
+  labels: {{- include "my-app.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
-    matchLabels:
-      {{- include "my-php-app.selectorLabels" . | nindent 6 }}
+    matchLabels: {{- include "my-app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        {{- include "my-php-app.selectorLabels" . | nindent 8 }}
+      labels: {{- include "my-app.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-        - name: my-php-app
+        - name: my-app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.port }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.port }}
+            - containerPort: 3000
           env:
             - name: DB_HOST
               valueFrom:
