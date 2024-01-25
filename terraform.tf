@@ -13,6 +13,26 @@ provider "helm" {
   }
 }
 
+module "kyverno" {
+  source = "./kyverno"
+
+  providers = {
+    "helm" = helm
+  }
+
+  enabled = false
+}
+
+
+resource "helm_release" "kyverno" {
+  count      = var.enable_kyverno ? 1 : 0
+  name       = "kyverno"
+  repository = "https://kyverno.github.io/kyverno/"
+  chart      = "kyverno"
+
+  create_namespace = true
+  namespace = "kyverno"
+}
 resource "helm_release" "webapp" {
   name  = "webapp"
   chart = "./app/backend/helm"
@@ -57,4 +77,9 @@ variable "dbconfig" {
     username = string
     password = string
   })
+}
+
+variable "enable_kyverno" {
+  type    = bool
+  default = false
 }
