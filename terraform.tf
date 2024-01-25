@@ -13,17 +13,6 @@ provider "helm" {
   }
 }
 
-module "kyverno" {
-  source = "./kyverno"
-
-  providers = {
-    "helm" = helm
-  }
-
-  enabled = false
-}
-
-
 resource "helm_release" "kyverno" {
   count      = var.enable_kyverno ? 1 : 0
   name       = "kyverno"

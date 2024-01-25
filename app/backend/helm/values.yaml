@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: secure-containers/my-app
+  repository: woodenmaiden/reverse-shell-example
   pullPolicy: IfNotPresent
   tag: "latest"
 
