@@ -35,4 +35,10 @@ EOF
 python3 /get_host_files.py
 ```
 
-And now every tokens are in the `host` directory 
+And now every tokens are in the `host` directory !!!
+
+# Mitigation 
+
+```
+kubectl apply -f manifests/kyverno
+```

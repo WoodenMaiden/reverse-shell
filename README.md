@@ -60,7 +60,7 @@ Acess grafana with the following command, it will be available on [http://localh
 ```bash
 kubectl --namespace monitoring port-forward svc/grafana 3000
 ```
-
+Once connected Go to `Create your first dashboard` click on `import dashboard` and paste the following ID: `15804` and click on `load`.
 
 ## Exploits 
 
