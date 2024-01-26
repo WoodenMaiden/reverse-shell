@@ -39,6 +39,9 @@ terraform init
 terraform apply
 ```
 
+The webapp will be available on [http://127.0.0.1.sslip.io:8080](http://127.0.0.1.sslip.io:8080)
+
+---
 
 To apply the monitoring stack do these commands: 
 

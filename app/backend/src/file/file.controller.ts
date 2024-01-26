@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param, Req, Logger } from '@nestjs/common';
 import { Request } from 'express';
 import { FileService } from './file.service';
 
@@ -8,11 +8,15 @@ export class FileController {
 
   @Get(':filename')
   async getFile(@Param('filename') filename: string, @Req() req: Request) {
-    return await this.fileService.readFile(filename, req.ip);
+    const result = await this.fileService.readFile(filename, req.ip);
+    Logger.log(`${filename}`);
+    return result;
   }
 
   @Get()
   async getAllFiles() {
-    return await this.fileService.getAllFiles();
+    const result = await this.fileService.getAllFiles();
+    Logger.log(`${result}`);
+    return result;
   }
 }

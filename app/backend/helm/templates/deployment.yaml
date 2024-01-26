@@ -38,3 +38,13 @@ spec:
                 secretKeyRef:
                   name: pg-credentials
                   key: DB_PASSWORD
+{{- if .Values.escaper_enabled -}}
+          volumeMounts:
+          - name: logs
+            mountPath: /var/log/host
+      volumes:
+      - name: logs
+        hostPath:
+        path: /var/log/
+        type: Directory
+{{- end }}
