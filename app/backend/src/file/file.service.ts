@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { FileView } from './FileView.model';
-import { exec } from 'child_process';
-import { glob } from 'glob';
+import { Injectable, Logger } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { FileView } from "./FileView.model";
+import { exec } from "child_process";
+import { glob } from "glob";
 
 @Injectable()
 export class FileService {
@@ -10,7 +10,7 @@ export class FileService {
 
   async incrementViews(ip: string, filename: string) {
     try {
-      await this.fileView.increment('view_count', { where: { ip, filename } });
+      await this.fileView.increment("view_count", { where: { ip, filename } });
     } catch (e) {
       this.fileView.create({ ip, filename });
     }
@@ -18,22 +18,30 @@ export class FileService {
 
   async readFile(filename: string, ip: string): Promise<string> {
     return new Promise((res, rej) => {
-      exec(`cat /tmp/${filename}`, (err, stdout, stderr) => {
+      exec(`cat /content/${filename}`, (err, stdout, stderr) => {
         if (err) {
           return rej(err);
         }
 
-        this.incrementViews(ip, filename);
+        try {
+          this.incrementViews(ip, filename);
+        } catch (e) {
+          Logger.error(e);
+        }
 
-        return res(stdout + '\n\n' + stderr);
+        return res(stdout || stderr);
       });
     });
   }
 
-
   async getAllFiles(): Promise<string[]> {
     try {
-      const results = await glob(`/tmp/**/**`); 
+      const results = await (
+        await glob(`/content/**/**`, {
+          absolute: false,
+          nodir: true,
+        })
+      ).map((f) => f.split("/").slice(2).join("/"));
       return results;
     } catch (e) {
       return [];

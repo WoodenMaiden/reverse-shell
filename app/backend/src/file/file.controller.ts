@@ -10,7 +10,7 @@ export class FileController {
   async getFile(@Param('filename') filename: string, @Req() req: Request) {
     const result = await this.fileService.readFile(filename, req.ip);
     Logger.log(`${filename}`);
-    return result;
+    return { content: result };
   }
 
   @Get()
