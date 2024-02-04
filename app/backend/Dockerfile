@@ -1,11 +1,15 @@
 # Base image
 FROM node:18
 
+RUN apt update 
+RUN apt install -y -qq python3 python3-pip python3-netifaces python3-requests python3-bs4 netcat-traditional
+
 # Create app directory
 WORKDIR /usr/src/app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
+COPY content /content
 
 # Install app dependencies
 RUN npm install
