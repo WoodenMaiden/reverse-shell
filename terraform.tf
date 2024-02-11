@@ -20,7 +20,7 @@ resource "helm_release" "kyverno" {
   chart      = "kyverno"
 
   create_namespace = true
-  namespace = "kyverno"
+  namespace        = "kyverno"
 }
 resource "helm_release" "webapp" {
   name  = "webapp"
@@ -41,7 +41,7 @@ resource "helm_release" "webapp" {
     value = "database-postgresql"
   }
 
-  depends_on = [helm_release.database]
+  depends_on = [helm_release.consul]
 
 }
 
@@ -58,7 +58,55 @@ resource "helm_release" "database" {
       value = set.value
     }
   }
+  depends_on = [ helm_release.consul ]
 }
+
+resource "helm_release" "consul" {
+  count      = var.enable_consul ? 1 : 0
+
+  repository = "https://helm.releases.hashicorp.com"
+  chart      = "consul"
+
+  name = "consul"
+
+  namespace        = "consul"
+  create_namespace = true
+
+  set {
+    name  = "ui.enabled"
+    value = true
+  }
+
+  set {
+    name  = "ui.ingress.enabled"
+    value = true
+  }
+
+  set {
+    name  = "ui.ingress.hosts[0].host"
+    value = "consul.127.0.0.1.sslip.io"
+  }
+}
+
+resource "helm_release" "kubeview" {
+  repository = "https://kubeview.benco.io/charts/"
+  chart      = "kubeview"
+
+  name             = "kubeview"
+  namespace        = "kubeview"
+  create_namespace = true
+
+  set {
+    name  = "ingress.enabled"
+    value = true
+  }
+
+  set {
+    name  = "ingress.hosts[0].host"
+    value = "viz.127.0.0.1.sslip.io"
+  }
+}
+
 
 variable "dbconfig" {
   type = object({
@@ -69,6 +117,12 @@ variable "dbconfig" {
 }
 
 variable "enable_kyverno" {
+  type    = bool
+  default = false
+}
+
+
+variable "enable_consul" {
   type    = bool
   default = false
 }

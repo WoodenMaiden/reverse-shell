@@ -10,6 +10,8 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: primary
+    consul.hashicorp.com/service-ignore: "true"
+
   annotations:
     {{- if or .Values.primary.service.headless.annotations .Values.commonAnnotations }}
     {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.primary.service.headless.annotations .Values.commonAnnotations ) "context" . ) }}

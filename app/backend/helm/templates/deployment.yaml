@@ -10,6 +10,8 @@ spec:
   template:
     metadata:
       labels: {{- include "my-app.selectorLabels" . | nindent 8 }}
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
     spec:
       containers:
         - name: my-app

@@ -34,6 +34,7 @@ spec:
         app.kubernetes.io/component: read
       {{- if or (include "postgresql.v1.readReplicas.createExtendedConfigmap" .) .Values.readReplicas.podAnnotations }}
       annotations:
+        consul.hashicorp.com/connect-inject: 'true'
         {{- if (include "postgresql.v1.readReplicas.createExtendedConfigmap" .) }}
         checksum/extended-configuration: {{ pick (include (print $.Template.BasePath "/primary/extended-configmap.yaml") . | fromYaml) "data" | toYaml | sha256sum }}
         {{- end }}

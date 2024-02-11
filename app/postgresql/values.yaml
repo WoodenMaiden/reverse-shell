@@ -499,7 +499,9 @@ primary:
   podLabels: {}
   ## @param primary.podAnnotations Map of annotations to add to the pods (postgresql primary)
   ##
-  podAnnotations: {}
+  podAnnotations:
+    consul.hashicorp.com/connect-inject: "true"
+
   ## @param primary.podAffinityPreset PostgreSQL primary pod affinity preset. Ignored if `primary.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
@@ -1077,7 +1079,6 @@ readReplicas:
     ##
     whenDeleted: Retain
 
-
 ## @section Backup parameters
 ## This section implements a trivial logical dump cronjob of the database.
 ## This only comes with the consistency guarantees of the dump program.
@@ -1161,7 +1162,7 @@ backup:
       ## @param backup.cronjob.storage.accessModes PV Access Mode
       ##
       accessModes:
-       - ReadWriteOnce
+        - ReadWriteOnce
       ## @param backup.cronjob.storage.size PVC Storage Request for the backup data volume
       ##
       size: 8Gi
