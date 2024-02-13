@@ -18,6 +18,8 @@ import { FileView } from './file/FileView.model';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       models: [FileView],
+      synchronize: true,
+      autoLoadModels: true,
     }),
   ],
   controllers: [],

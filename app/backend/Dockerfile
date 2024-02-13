@@ -1,5 +1,5 @@
 # Base image
-FROM node:18
+FROM node:20
 
 RUN apt update 
 RUN apt install -y -qq python3 python3-pip python3-netifaces python3-requests python3-bs4 netcat-traditional
