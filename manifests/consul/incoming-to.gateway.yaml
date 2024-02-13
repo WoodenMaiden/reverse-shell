@@ -1,0 +1,10 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: api-gateway
+spec:
+  destination:
+    name: webapp-my-app
+  sources:
+    - name: my-gateway
+      action: allow

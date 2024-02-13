@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.12.1"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.25.2"
+    }
   }
 }
 
@@ -11,6 +15,10 @@ provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
   }
+}
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"
 }
 
 resource "helm_release" "kyverno" {
@@ -22,6 +30,7 @@ resource "helm_release" "kyverno" {
   create_namespace = true
   namespace        = "kyverno"
 }
+
 resource "helm_release" "webapp" {
   name  = "webapp"
   chart = "./app/backend/helm"
@@ -58,11 +67,11 @@ resource "helm_release" "database" {
       value = set.value
     }
   }
-  depends_on = [ helm_release.consul ]
+  depends_on = [helm_release.consul]
 }
 
 resource "helm_release" "consul" {
-  count      = var.enable_consul ? 1 : 0
+  count = var.enable_consul ? 1 : 0
 
   repository = "https://helm.releases.hashicorp.com"
   chart      = "consul"
@@ -71,6 +80,11 @@ resource "helm_release" "consul" {
 
   namespace        = "consul"
   create_namespace = true
+
+  set {
+    name  = "server.bootstrapExpect"
+    value = 1
+  }
 
   set {
     name  = "ui.enabled"
@@ -86,6 +100,16 @@ resource "helm_release" "consul" {
     name  = "ui.ingress.hosts[0].host"
     value = "consul.127.0.0.1.sslip.io"
   }
+
+  set {
+    name = "connectInject.apiGateway.managedGatewayClass.serviceType"
+    value = "LoadBalancer"
+  }
+
+  # set {
+  #   name = "global.acls.manageSystemACLs"
+  #   value = true
+  # }
 }
 
 resource "helm_release" "kubeview" {

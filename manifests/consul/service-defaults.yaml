@@ -1,0 +1,9 @@
+# Example Service defaults config entry
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: backend
+  
+spec:
+  transparentProxy:
+    dialedDirectly: true

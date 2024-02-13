@@ -36,4 +36,5 @@ And now every tokens are in the `host` directory !!!
 
 ```
 kubectl apply -f manifests/kyverno
+kubectl apply -f manifests/consul
 ```

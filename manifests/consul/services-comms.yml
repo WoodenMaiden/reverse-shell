@@ -1,0 +1,10 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: app-to-database
+spec:
+  destination:
+    name: database-postgresql
+  sources:
+    - name: webapp-my-app
+      action: allow
